@@ -15,14 +15,26 @@ class App extends Component {
         super();
         this.swapSquare = this.swapSquare.bind(this);
         this.selectSquare = this.selectSquare.bind(this);
-        this.handleTileClick = this.handleTileClick.bind(this);
+        this.rotateSquare = this.rotateSquare.bind(this);
     }
 
     state = {
         tiles: [
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9]
+            [
+                { value: 1, rotation: 0 },
+                { value: 2, rotation: 0 },
+                { value: 3, rotation: 0 }
+            ],
+            [
+                { value: 4, rotation: 0 },
+                { value: 5, rotation: 0 },
+                { value: 6, rotation: 0 }
+            ],
+            [
+                { value: 7, rotation: 0 },
+                { value: 8, rotation: 0 },
+                { value: 9, rotation: 0 }
+            ]
         ],
         selected: { x: 0, y: 0 }
     }
@@ -44,27 +56,46 @@ class App extends Component {
     }
 
     selectSquare = (x, y) => {
+        console.log('select Square fired');
         this.setState({ selected: { x: x, y: y } });
     }
 
-    handleTileClick = (x, y) => {
-        if (this.state.selected === undefined) {
-            this.selectSquare(x, y);
-        } else {
-            this.swapSquare(x, y);
-        }
+    rotateSquare = (x, y) => {
+        let rotation = this.state.tiles[y][x].rotation;
+        rotation = rotation + 90;
+        const array = [...this.state.tiles];
+        array[y][x].rotation = rotation;
+        this.setState({
+            tiles: array,
+            selected: { x: x, y: y }
+        })
     }
 
     render() {
         return (
             <Wrapper>
-                {this.state.tiles.map((row, y) => {
-                    return row.map((tile, x) => {
-                        const isSelected = !isNullOrUndefined(this.state.selected) && x === this.state.selected.x && y === this.state.selected.y
-                        return <Tile onClick={() => this.handleTileClick(x, y)} selected={isSelected}> {tile}</Tile>;
+                {
+                    this.state.tiles.map((row, y) => {
+                        return row.map((tile, x) => {
+                            const isSelected =
+                                !isNullOrUndefined(this.state.selected) &&
+                                x === this.state.selected.x &&
+                                y === this.state.selected.y
+
+                            return <Tile
+                                key={x}
+                                onDragStart={() => this.selectSquare(x, y)}
+                                onDrop={() => this.swapSquare(x, y)}
+                                selected={isSelected}
+                                onClick={() => this.rotateSquare(x, y)}
+                                rotation={tile.rotation}
+                            >
+                                {tile.value}
+                            </Tile>;
+                        })
                     })
-                })}
-            </Wrapper>
+                }
+            </Wrapper >
         );
     }
 }

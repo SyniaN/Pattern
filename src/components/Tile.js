@@ -10,18 +10,38 @@ const Square = style.div`
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    background-color: ${props => props.selected ? "gray" : "transparent"}
+    background-color: ${props => props.selected ? "gray" : "transparent"};
+    transform: ${props => "rotateZ(" + props.rotation + "deg)"};
 `
 
-const Tile = (props) => {
-    return (
-        <div onClick={props.onClick}>
-            <Square selected={props.selected}>
-                {props.children}
-            </Square>
-        </div>
-    );
+export default class Tile extends React.Component {
+
+    handleDragStart = (e) => {
+        e.dataTransfer.setData("Text", e.target.i)
+        this.props.onDragStart();
+    }
+
+    handleDrop = (e) => {
+        console.log("drop");
+        e.preventDefault()
+        this.props.onDrop();
+
+    }
+
+    render() {
+        return (
+            <div >
+                <Square droppable="true" draggable="true"
+                    rotation={this.props.rotation}
+                    onClick={this.props.onClick}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDragStart={this.handleDragStart}
+                    onDrop={this.handleDrop}
+                    selected={this.props.selected}>
+                    {this.props.children}
+                </Square>
+            </div >
+        );
+    }
 };
 
-
-export default Tile;
