@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import React, { Component } from 'react';
 import style from 'styled-components';
 import Tile from './components/Tile';
@@ -19,24 +20,25 @@ class App extends Component {
     }
 
     state = {
+        imageUrl: "https://vignette.wikia.nocookie.net/logopedia/images/1/16/300px-DC_Comics_logo.svg.png/revision/latest?cb=20110127205851",
         tiles: [
             [
-                { value: 1, rotation: 0 },
-                { value: 2, rotation: 0 },
-                { value: 3, rotation: 0 }
+                { value: 1, rotation: 0, imgPosition: { x: 0, y: 0 } },
+                { value: 2, rotation: 0, imgPosition: { x: -100, y: 0 } },
+                { value: 3, rotation: 0, imgPosition: { x: -200, y: 0 } }
             ],
             [
-                { value: 4, rotation: 0 },
-                { value: 5, rotation: 0 },
-                { value: 6, rotation: 0 }
+                { value: 4, rotation: 0, imgPosition: { x: 0, y: -100 } },
+                { value: 5, rotation: 0, imgPosition: { x: -100, y: -100 } },
+                { value: 6, rotation: 0, imgPosition: { x: -200, y: -100 } }
             ],
             [
-                { value: 7, rotation: 0 },
-                { value: 8, rotation: 0 },
-                { value: 9, rotation: 0 }
+                { value: 7, rotation: 0, imgPosition: { x: 0, y: -200 } },
+                { value: 8, rotation: 0, imgPosition: { x: -100, y: -200 } },
+                { value: 9, rotation: 0, imgPosition: { x: -200, y: -200 } }
             ]
         ],
-        selected: { x: 0, y: 0 }
+        selected: undefined
     }
 
     swapSquare = (x, y) => {
@@ -84,6 +86,8 @@ class App extends Component {
 
                             return <Tile
                                 key={x}
+                                imageUrl={this.state.imageUrl}
+                                imgPosition={tile.imgPosition}
                                 onDragStart={() => this.selectSquare(x, y)}
                                 onDrop={() => this.swapSquare(x, y)}
                                 selected={isSelected}
@@ -101,3 +105,9 @@ class App extends Component {
 }
 
 export default App;
+
+const Sample = styled.div`
+    height: 300px;
+    width: 300px;
+    background-image: ${props => "url('" + props.imageUrl + "')"};
+`
